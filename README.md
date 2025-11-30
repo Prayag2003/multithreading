@@ -2,6 +2,13 @@
 
 A beginner-friendly learning repository for C++ concurrency concepts. Learn step-by-step with clear examples and explanations.
 
+## 🔗 Resources
+
+- [🔴 YouTube: Cpp Nuts Multithreading Playlist](https://youtu.be/TPVH_coGAQs)
+- [C++ Reference: Threading](https://en.cppreference.com/w/cpp/thread)
+- [C++ Reference: Mutex](https://en.cppreference.com/w/cpp/thread/mutex)
+- [C++ Reference: Condition Variables](https://en.cppreference.com/w/cpp/thread/condition_variable)
+
 ## 📚 What You'll Learn
 
 - **Basics**: Core threading concepts from scratch
@@ -152,15 +159,6 @@ threadpool/
 ├── threadpool.cpp                   # Main threadpool implementation
 └── README.md                        # This file
 ```
-
----
-
-## 🔗 Resources
-
-- [🔴 YouTube: C++ Nuts Multithreading Playlist](https://youtu.be/TPVH_coGAQs)
-- [C++ Reference: Threading](https://en.cppreference.com/w/cpp/thread)
-- [C++ Reference: Mutex](https://en.cppreference.com/w/cpp/thread/mutex)
-- [C++ Reference: Condition Variables](https://en.cppreference.com/w/cpp/thread/condition_variable)
 
 ---
 
