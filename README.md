@@ -1,113 +1,133 @@
-# ThreadPool
+# C++ Threading & Synchronization Learning Guide 🧵
 
-A small C++ learning repository demonstrating threading primitives and synchronization techniques using the C++ Standard Library (`std::thread`, `std::mutex`, condition variables, and related utilities). The examples live under `pre-requisites/basics` and are meant as bite-sized exercises for understanding common concurrency concepts and pitfalls.
+A comprehensive learning repository for C++ concurrency concepts using `std::thread`, `std::mutex`, condition variables, and related utilities.
 
-**Goals**
+## Quick Start
 
-- Demonstrate thread creation and lifecycle.
-- Show common concurrency problems (race conditions) and fixes.
-- Illustrate mutex usage, try-lock variants, lock wrappers, and condition variables.
+### Build All Examples
 
-**How to build**
-
-Create a `bin` directory to place executables (optional):
-
-```
+```bash
 mkdir -p bin
-```
-
-To compile all examples quickly from the shell you can run:
-
-```
 for f in pre-requisites/basics/*.cpp; do
-	name=$(basename "$f" .cpp)
-	g++ -std=c++17 -Wall -Wextra -pthread "$f" -o "bin/$name"
+    name=$(basename "$f" .cpp)
+    g++ -std=c++17 -Wall -Wextra -pthread "$f" -o "bin/$name"
+done
+
+for f in pre-requisites/implementations/*.cpp; do
+    name=$(basename "$f" .cpp)
+    g++ -std=c++17 -Wall -Wextra -pthread "$f" -o "bin/$name"
 done
 ```
 
-Run an example:
+### Run an Example
 
-```
+```bash
 ./bin/00_basics_of_threads
 ```
 
-**Examples (files and short descriptions)**
+---
 
-- **`00_basics_of_threads.cpp`**: Beginner introduction to `std::thread`.
+## Basics: Threading Fundamentals
 
-     - Intent: Show how to start threads and the simplest way to run work concurrently.
-     - What to look for: Race conditions when multiple threads write to `std::cout` at the same time.
-     - How to run: Compile and run the program; you may see interleaved/garbled output when threads print simultaneously.
-     - Key takeaways: Threads run independently; shared resources require synchronization.
-     - Suggested exercise: Add sleeps to force interleaving, then protect `std::cout` with a mutex and compare output.
+Learn core threading concepts step by step.
 
-- **`01_thread_creation.cpp`**: Different thread creation idioms.
+| #   | Code File                                                                          | Documentation                                                                     | What You'll Learn                                           |
+| --- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| 00  | [`00_basics_of_threads.cpp`](pre-requisites/basics/00_basics_of_threads.cpp)       | [📖 Basics of Threads](pre-requisites/documentation/00_basics_of_threads.md)      | What threads are, why they're useful, race conditions       |
+| 01  | [`01_thread_creation.cpp`](pre-requisites/basics/01_thread_creation.cpp)           | [📖 Thread Creation](pre-requisites/documentation/01_thread_creation.md)          | Functions, functors, lambdas, passing arguments, `std::ref` |
+| 02  | [`02_join_detach.cpp`](pre-requisites/basics/02_join_detach.cpp)                   | [📖 join() vs detach()](pre-requisites/documentation/02_join_detach.md)           | Thread lifetime, waiting, independent threads               |
+| 03  | [`03_mutex.cpp`](pre-requisites/basics/03_mutex.cpp)                               | [📖 Mutex Protection](pre-requisites/documentation/03_mutex.md)                   | Protecting shared data, critical sections, locks            |
+| 04  | [`04_try_lock.cpp`](pre-requisites/basics/04_try_lock.cpp)                         | [📖 try_lock()](pre-requisites/documentation/04_try_lock.md)                      | Non-blocking lock attempts, avoiding deadlocks              |
+| 05  | [`05_multiple_try_lock.cpp`](pre-requisites/basics/05_multiple_try_lock.cpp)       | [📖 Multiple Locks](pre-requisites/documentation/05_multiple_try_lock.md)         | Locking multiple mutexes safely, `std::lock()`              |
+| 06  | [`06_recursion_lock.cpp`](pre-requisites/basics/06_recursion_lock.cpp)             | [📖 Recursive Mutex](pre-requisites/documentation/06_recursion_lock.md)           | Recursive locking, reentrancy, `std::recursive_mutex`       |
+| 07  | [`07_lock_guard.cpp`](pre-requisites/basics/07_lock_guard.cpp)                     | [📖 Lock Guard](pre-requisites/documentation/07_lock_guard.md)                    | RAII pattern, automatic unlocking, exception safety         |
+| 08  | [`08_unique_lock.cpp`](pre-requisites/basics/08_unique_lock.cpp)                   | [📖 Unique Lock](pre-requisites/documentation/08_unique_lock.md)                  | Manual control, deferred locking, timed waits               |
+| 09  | [`09_conditional_variable.cpp`](pre-requisites/basics/09_conditional_variable.cpp) | [📖 Condition Variables](pre-requisites/documentation/09_conditional_variable.md) | Thread signaling, producer-consumer, `wait()` / `notify()`  |
+| 10  | [`10_deadlock.cpp`](pre-requisites/basics/10_deadlock.cpp)                         | [📖 Deadlock Prevention](pre-requisites/documentation/10_deadlock.md)             | Circular waits, safe lock ordering, detection               |
+| 11  | [`11_future_and_promise.cpp`](pre-requisites/basics/11_future_and_promise.cpp)     | [📖 Futures & Promises](pre-requisites/documentation/11_future_and_promise.md)    | Getting return values from threads, exception passing       |
+| 12  | [`12_async.cpp`](pre-requisites/basics/12_async.cpp)                               | [📖 std::async](pre-requisites/documentation/12_async.md)                         | Simplest concurrency, automatic thread management           |
 
-     - Intent: Demonstrate starting threads from functions, functors, and lambdas and passing arguments safely.
-     - What to look for: How arguments are copied or moved into the thread and how to use `std::ref` for references.
-     - How to run: Compile and run; each thread should perform its assigned work and print identifiable messages.
-     - Key takeaways: Prefer passing small PODs by value, use `std::ref` for references, and ensure referenced data outlives the thread.
-     - Suggested exercise: Create a shared vector and attempt to modify it from multiple threads (then fix with a mutex).
+---
 
-- **`02_join_detach.cpp`**: Thread lifetime and ownership.
+## Implementations: Real-World Patterns
 
-     - Intent: Explain `join()` vs `detach()` and when to use each.
-     - What to look for: Program termination behavior — with `join()` the main thread waits; with `detach()` threads run independently.
-     - How to run: Try both modes; observe program exit sometimes before detached threads finish (or crash if they access invalid memory).
-     - Key takeaways: Use `join()` for predictable cleanup; `detach()` requires caution and stable resources.
-     - Suggested exercise: Convert a `join()` example to `detach()` and add a bug (dangling reference) to see failure modes.
+Apply concepts to solve practical problems.
 
-- **`03_mutex.cpp`**: Protecting shared data with `std::mutex`.
+| #   | Code File                                                                                                 | Documentation                                                                                      | What You'll Learn                                |
+| --- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| 00  | [`00_producer_consumer_mutex.cpp`](pre-requisites/implementations/00_producer_consumer_mutex.cpp)         | [📖 Producer-Consumer (Mutex)](pre-requisites/documentation/00_producer_consumer_mutex.md)         | Bounded buffer pattern, mutex-based coordination |
+| 01  | [`01_atomic.cpp`](pre-requisites/implementations/01_atomic.cpp)                                           | [📖 Atomics](pre-requisites/documentation/01_atomic.md)                                            | Lock-free synchronization, atomic operations     |
+| 02  | [`02_binary_semaphore.cpp`](pre-requisites/implementations/02_binary_semaphore.cpp)                       | [📖 Binary Semaphore](pre-requisites/documentation/02_binary_semaphore.md)                         | Semaphore basics, acquire/release pattern        |
+| 03  | [`03_producer_consumer_semaphore.cpp`](pre-requisites/implementations/03_producer_consumer_semaphore.cpp) | [📖 Producer-Consumer (Semaphore)](pre-requisites/documentation/03_producer_consumer_semaphore.md) | Elegant bounded buffer with semaphores           |
 
-     - Intent: Introduce `std::mutex` for mutual exclusion around shared state.
-     - What to look for: Critical sections where shared counters or I/O are updated.
-     - How to run: Run a version without mutex (observe race), then enable the mutex and compare deterministic results.
-     - Key takeaways: Locks serialize access but can introduce contention; keep critical sections short.
-     - Suggested exercise: Measure timing differences with and without mutex protection.
+---
 
-- **`04_try_lock.cpp`**: Non-blocking lock attempts.
+## Key Concepts Quick Reference
 
-     - Intent: Show how `try_lock()` lets a thread attempt to acquire a lock without waiting.
-     - What to look for: Code paths executed when the lock is busy vs when it's acquired.
-     - How to run: Run multiple threads competing for a mutex; observe how some threads back off or retry.
-     - Key takeaways: `try_lock()` is useful to avoid deadlocks or to perform alternative work if a resource is busy.
-     - Suggested exercise: Implement exponential backoff when `try_lock()` fails.
+| Concept                 | Use When                                   | See Example                          |
+| ----------------------- | ------------------------------------------ | ------------------------------------ |
+| **Mutex**               | Protecting shared data                     | `03_mutex.cpp`                       |
+| **Lock Guard**          | Simple RAII locking                        | `07_lock_guard.cpp`                  |
+| **Unique Lock**         | Need manual control or condition variables | `08_unique_lock.cpp`                 |
+| **Condition Variables** | Threads need to signal each other          | `09_conditional_variable.cpp`        |
+| **std::async**          | Need results from threads                  | `12_async.cpp`                       |
+| **Atomics**             | Simple shared flags/counters               | `01_atomic.cpp`                      |
+| **Semaphores**          | Resource counting, bounded buffer          | `03_producer_consumer_semaphore.cpp` |
 
-- **`05_multiple_try_lock.cpp`**: Locking multiple mutexes safely.
+---
 
-     - Intent: Demonstrate strategies to lock more than one mutex without deadlock (e.g., `std::lock`, consistent ordering).
-     - What to look for: Potential deadlock scenarios and how the example avoids them.
-     - How to run: Run two threads that need two resources; observe correct behavior when using safe locking patterns.
-     - Key takeaways: Never assume independent locks are safe; either adopt an order or use `std::lock`/scoped wrappers.
-     - Suggested exercise: Intentionally introduce inverse lock ordering to see a deadlock, then fix it.
+## Common Patterns
 
-- **`06_recursion_lock.cpp`**: Recursive mutexes and reentrancy.
+### Protect Shared Data
 
-     - Intent: Explain `std::recursive_mutex` and when recursion in locks is required.
-     - What to look for: Functions that call each other and attempt to lock the same mutex multiple times.
-     - How to run: Compare behavior with `std::mutex` (would deadlock) vs `std::recursive_mutex` (allows reentrant locking).
-     - Key takeaways: Prefer non-recursive locks when possible; recursive locks can hide design issues.
-     - Suggested exercise: Refactor recursive locking into a design that avoids recursion.
+```cpp
+std::mutex mtx;
+std::lock_guard<std::mutex> guard(mtx);
+sharedData++;
+```
 
-- **`07_lock_guard.cpp`**: RAII locking with `std::lock_guard`.
+### Wait for Signal
 
-     - Intent: Use RAII to automatically release locks and make code exception-safe.
-     - What to look for: Scope-based locking and guaranteed unlocking at scope exit.
-     - How to run: Introduce an exception in a locked section and see that the lock is still released.
-     - Key takeaways: Prefer `std::lock_guard` for simple lock/unlock needs to avoid forgetting unlocks.
-     - Suggested exercise: Replace manual `lock()`/`unlock()` calls with `std::lock_guard` in an example.
+```cpp
+std::condition_variable cv;
+cv.wait(lock, []() { return ready; });
+```
 
-- **`08_unique_lock.cpp`**: Flexible locking with `std::unique_lock`.
+### Get Result from Thread
 
-     - Intent: Show a more flexible lock type that supports deferred locking, timed waits, and transfer of ownership.
-     - What to look for: Examples of `unique_lock` being unlocked and re-locked, or used with condition variables.
-     - How to run: Explore deferred lock and timed lock examples to see different behaviors.
-     - Key takeaways: `std::unique_lock` is slightly heavier than `lock_guard` but necessary for advanced patterns.
-     - Suggested exercise: Replace `lock_guard` with `unique_lock` to allow calling `wait()` on a condition variable.
+```cpp
+auto future = std::async(compute, args);
+int result = future.get();
+```
 
-- **`09_conditional_variable.cpp`**: Synchronization with `std::condition_variable`.
-     - Intent: Demonstrate producer/consumer coordination using a condition variable to wait and notify.
-     - What to look for: Proper use of `std::unique_lock`, predicate usage with `wait()`, and using `notify_one()` / `notify_all()`.
-     - How to run: Start producer and consumer threads; watch consumers block until producers push data and notify.
-     - Key takeaways: Always use a predicate with `wait()` to avoid spurious wakeups; protect shared data with a mutex.
-     - Suggested exercise: Implement a bounded buffer and make multiple producers/consumers.
+### Lock Multiple Resources Safely
+
+```cpp
+std::scoped_lock lock(mtx1, mtx2);  // C++17
+```
+
+---
+
+## Learning Tips
+
+✅ **Read the documentation first** - Understand concepts before code  
+✅ **Run each example** - See output, modify, experiment  
+✅ **Try the exercises** - Create your own variations  
+✅ **Progress sequentially** - Each topic builds on previous ones  
+✅ **Keep code simple** - Focus on one concept per example
+
+---
+
+## Requirements
+
+- **C++17** or later
+- **GCC**, **Clang**, or **MSVC** compiler
+- **pthread** library (usually included)
+
+---
+
+## Resources
+
+- [C++ Reference: Threading](https://en.cppreference.com/w/cpp/thread)
+- [C++ Reference: Mutex](https://en.cppreference.com/w/cpp/thread/mutex)
+- [C++ Reference: Condition Variables](https://en.cppreference.com/w/cpp/thread/condition_variable)
