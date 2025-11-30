@@ -11,7 +11,7 @@ void task(const char *threadId, int loopFor)
     // Immediately calls the lock on mutex
     std::unique_lock<mutex> lock(m1);
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < loopFor; i++)
     {
         buffer++;
         cout << threadId << " " << buffer << "\n";
@@ -24,7 +24,7 @@ void lazyLocking(const char *threadId, int loopFor)
     std::unique_lock<mutex> lock(m1, defer_lock);
     // Do things here
     lock.lock();
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < loopFor; i++)
     {
         buffer++;
         cout << threadId << " " << buffer << "\n";

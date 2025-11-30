@@ -93,7 +93,6 @@ public:
 
 void usingStaticMember()
 {
-	Base3 b3;
 	std::thread t(&Base3::trigger, 10);
 	t.join();
 }

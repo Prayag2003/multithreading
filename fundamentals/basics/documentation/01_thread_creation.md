@@ -167,7 +167,7 @@ class Counter {
     int count;
 public:
     Counter(int start) : count(start) {}
-    
+
     void operator()() {
         for (int i = 0; i < 5; i++) {
             std::cout << "Count: " << count++ << "\n";
@@ -221,7 +221,7 @@ class Worker {
     int id;
 public:
     Worker(int i) : id(i) {}
-    
+
     void doWork(int iterations) {
         for (int i = 0; i < iterations; i++) {
             std::cout << "Worker " << id << " iteration " << i << "\n";
@@ -231,10 +231,10 @@ public:
 
 int main() {
     Worker w1(1), w2(2);
-    
+
     std::thread t1(&Worker::doWork, &w1, 5);
     std::thread t2(&Worker::doWork, &w2, 5);
-    
+
     t1.join();
     t2.join();
 }
@@ -324,13 +324,13 @@ void printThreadInfo() {
 
 int main() {
     std::cout << "Main thread ID: " << std::this_thread::get_id() << "\n";
-    
+
     std::thread t1(printThreadInfo);
     std::thread t2(printThreadInfo);
-    
+
     std::cout << "t1 ID: " << t1.get_id() << "\n";
     std::cout << "t2 ID: " << t2.get_id() << "\n";
-    
+
     t1.join();
     t2.join();
 }
@@ -338,13 +338,13 @@ int main() {
 
 ## Comparison Table
 
-| Method | Syntax | State | Use Case | Complexity |
-|--------|--------|-------|----------|------------|
-| Function | `std::thread(func)` | No | Simple operations | Low |
-| Lambda | `std::thread([](){})` | Optional | Quick tasks | Low |
-| Functor | `std::thread(Obj())` | Yes | Complex logic | Medium |
-| Non-static | `std::thread(&C::f, &obj)` | Yes | Member functions | Medium |
-| Static | `std::thread(&C::f)` | No | Utility functions | Low |
+| Method     | Syntax                     | State    | Use Case          | Complexity |
+| ---------- | -------------------------- | -------- | ----------------- | ---------- |
+| Function   | `std::thread(func)`        | No       | Simple operations | Low        |
+| Lambda     | `std::thread([](){})`      | Optional | Quick tasks       | Low        |
+| Functor    | `std::thread(Obj())`       | Yes      | Complex logic     | Medium     |
+| Non-static | `std::thread(&C::f, &obj)` | Yes      | Member functions  | Medium     |
+| Static     | `std::thread(&C::f)`       | No       | Utility functions | Low        |
 
 ## Best Practices
 
@@ -386,7 +386,7 @@ t.join();  // or t.detach()
 // ❌ Wrong
 std::thread createThread() {
     int local = 10;
-    return std::thread([&local]() { 
+    return std::thread([&local]() {
         std::cout << local;  // local destroyed!
     });
 }

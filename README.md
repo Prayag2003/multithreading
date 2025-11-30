@@ -19,13 +19,13 @@ mkdir -p bin
 # Build basics examples
 for f in fundamentals/basics/*.cpp; do
     name=$(basename "$f" .cpp)
-    g++ -std=c++17 -Wall -Wextra -pthread "$f" -o "bin/$name"
+    g++ -std=c++20 -Wall -Wextra -pthread "$f" -o "bin/$name"
 done
 
 # Build implementation examples
 for f in fundamentals/implementations/*.cpp; do
     name=$(basename "$f" .cpp)
-    g++ -std=c++17 -Wall -Wextra -pthread "$f" -o "bin/$name"
+    g++ -std=c++20 -Wall -Wextra -pthread "$f" -o "bin/$name"
 done
 ```
 
@@ -130,7 +130,7 @@ std::scoped_lock lock(mtx1, mtx2);  // C++17
 
 ## 🔧 Requirements
 
-- **C++17** or later
+- **C++20** or later
 - **GCC**, **Clang**, or **MSVC** compiler
 - **pthread** library (usually included with compiler)
 
