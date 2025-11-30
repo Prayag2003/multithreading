@@ -157,6 +157,7 @@ threadpool/
 
 ## 🔗 Resources
 
+- [🔴 YouTube: C++ Nuts Multithreading Playlist](https://youtu.be/TPVH_coGAQs)
 - [C++ Reference: Threading](https://en.cppreference.com/w/cpp/thread)
 - [C++ Reference: Mutex](https://en.cppreference.com/w/cpp/thread/mutex)
 - [C++ Reference: Condition Variables](https://en.cppreference.com/w/cpp/thread/condition_variable)
