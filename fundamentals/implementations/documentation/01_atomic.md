@@ -20,6 +20,7 @@ counter++;  // Actually: load → increment → store (3 steps)
 ```
 
 **What can go wrong:**
+
 ```
 Thread 1: Load(0) → Increment → Store(1)
 Thread 2: Load(0) → Increment → Store(1)  // Lost update!
@@ -29,6 +30,7 @@ Result: 1 (should be 2)
 ## The Solution: std::atomic
 
 Atomic operations are guaranteed to be:
+
 - **Indivisible**: Cannot be interrupted
 - **Thread-safe**: Multiple threads can safely modify
 - **Lock-free**: No mutex overhead
@@ -53,10 +55,10 @@ void run() {
 int main() {
     std::thread t1(run);
     std::thread t2(run);
-    
+
     t1.join();
     t2.join();
-    
+
     std::cout << counter << "\n";  // Always 200000
     return 0;
 }
@@ -65,6 +67,7 @@ int main() {
 ### Why It Works
 
 The `++` operation on `std::atomic<int>` is guaranteed to be atomic. The CPU ensures that:
+
 1. The read-modify-write happens as one operation
 2. No other thread can interfere
 3. The result is always correct
@@ -134,6 +137,7 @@ void increment() {
 ```
 
 **Overhead:**
+
 - Lock acquisition (may block)
 - Cache line contention
 - Context switching if blocked
@@ -151,6 +155,7 @@ void increment() {
 ```
 
 **Benefits:**
+
 - No blocking (usually)
 - Hardware-level atomicity
 - Better cache performance
@@ -158,10 +163,10 @@ void increment() {
 
 ### Performance Comparison
 
-| Operation | Mutex | Atomic | Speedup |
-|-----------|-------|--------|---------|
-| Simple increment | ~100ns | ~10ns | ~10x |
-| Complex operation | Mutex required | Not applicable | - |
+| Operation         | Mutex          | Atomic         | Speedup |
+| ----------------- | -------------- | -------------- | ------- |
+| Simple increment  | ~100ns         | ~10ns          | ~10x    |
+| Complex operation | Mutex required | Not applicable | -       |
 
 ## Memory Ordering
 
@@ -231,15 +236,15 @@ void increment(int times) {
 
 int main() {
     std::vector<std::thread> threads;
-    
+
     for (int i = 0; i < 4; i++) {
         threads.push_back(std::thread(increment, 10000));
     }
-    
+
     for (auto& t : threads) {
         t.join();
     }
-    
+
     std::cout << "Counter: " << counter << "\n";  // Always 40000
     return 0;
 }
@@ -257,18 +262,18 @@ std::atomic<bool> ready(false);
 void worker() {
     // Do some work
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    
+
     ready = true;  // Signal completion
 }
 
 int main() {
     std::thread t(worker);
-    
+
     // Wait for flag
     while (!ready) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    
+
     std::cout << "Worker is ready!\n";
     t.join();
     return 0;
@@ -364,13 +369,13 @@ int idx = consumer_index.fetch_add(1);
 
 ## Benefits Over Mutex
 
-| Feature | Mutex | Atomic |
-|---------|-------|--------|
-| **Speed** | Slower | Faster |
-| **Blocking** | May block | Usually non-blocking |
-| **Code** | More verbose | Simpler |
-| **Complexity** | Easy to use | Need to understand memory ordering |
-| **Use case** | Complex operations | Simple operations |
+| Feature        | Mutex              | Atomic                             |
+| -------------- | ------------------ | ---------------------------------- |
+| **Speed**      | Slower             | Faster                             |
+| **Blocking**   | May block          | Usually non-blocking               |
+| **Code**       | More verbose       | Simpler                            |
+| **Complexity** | Easy to use        | Need to understand memory ordering |
+| **Use case**   | Complex operations | Simple operations                  |
 
 ## Limitations
 
@@ -389,5 +394,5 @@ int idx = consumer_index.fetch_add(1);
 
 ## Next Steps
 
-- Learn about mutexes: `pre-requisites/basics/03_mutex.cpp`
+- Learn about mutexes: `fundamentals/basics/03_mutex.cpp`
 - Learn about semaphores: `02_binary_semaphore.cpp`

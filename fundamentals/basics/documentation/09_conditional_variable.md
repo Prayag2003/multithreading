@@ -21,6 +21,7 @@ while (buffer.empty()) {
 ```
 
 **Problems:**
+
 - Wastes CPU cycles
 - Adds unnecessary delay
 - Doesn't respond immediately when condition changes
@@ -28,6 +29,7 @@ while (buffer.empty()) {
 ## The Solution: Condition Variables
 
 Condition variables allow threads to:
+
 1. **Wait efficiently**: Sleep until condition is met
 2. **Notify others**: Wake up waiting threads when condition changes
 3. **Avoid polling**: No need to repeatedly check conditions
@@ -47,12 +49,12 @@ std::mutex mut;
 
 void withDrawMoney(int amount) {
     std::unique_lock<std::mutex> ul(mut);
-    
+
     // Wait for balance to be non-zero
-    cv.wait(ul, []() { 
-        return (balance != 0) ? true : false; 
+    cv.wait(ul, []() {
+        return (balance != 0) ? true : false;
     });
-    
+
     // Balance is now non-zero, proceed with withdrawal
     if (balance >= amount) {
         balance -= amount;
@@ -68,14 +70,14 @@ void addMoney(int amount) {
     balance += amount;
     cout << "Amount added: " << amount << "\n";
     cout << "Balance = " << balance << "\n";
-    
+
     cv.notify_one();  // Notify waiting thread
 }
 
 int main() {
     std::thread withdrawThread(withDrawMoney, 500);
     std::thread addThread(addMoney, 500);
-    
+
     withdrawThread.join();
     addThread.join();
 }
@@ -107,6 +109,7 @@ cv.wait(ul, predicate);
 ```
 
 **Steps:**
+
 1. Unlocks the mutex (allows other threads to proceed)
 2. Waits for notification (thread sleeps, no CPU waste)
 3. When notified, relocks the mutex
@@ -122,6 +125,7 @@ cv.notify_all();   // Wakes up ALL waiting threads
 ```
 
 **When to use:**
+
 - `notify_one()`: Only one thread can proceed (e.g., single consumer)
 - `notify_all()`: Multiple threads can proceed (e.g., multiple consumers)
 
@@ -136,6 +140,7 @@ cv.wait(ul, []() { return balance != 0; });
 The predicate is a function that returns `true` when the condition is met.
 
 **Why it's needed:**
+
 1. **Spurious wakeups**: Threads may wake up without notification
 2. **Multiple conditions**: Check if YOUR condition is met
 3. **State verification**: Ensure data is in correct state
@@ -157,6 +162,7 @@ cv.wait(ul, []() { return balance != 0; });
 ### Why unique_lock?
 
 Condition variables require `unique_lock`, not `lock_guard`, because:
+
 - `wait()` needs to unlock the mutex
 - `lock_guard` cannot be unlocked manually
 - `unique_lock` allows manual unlock/lock
@@ -177,13 +183,13 @@ const int MAX_SIZE = 10;
 void producer() {
     for (int i = 0; i < 20; i++) {
         std::unique_lock<std::mutex> lock(mtx);
-        
+
         // Wait until buffer has space
         cv.wait(lock, []() { return buffer.size() < MAX_SIZE; });
-        
+
         buffer.push(i);
         std::cout << "Produced: " << i << "\n";
-        
+
         lock.unlock();
         cv.notify_one();  // Notify consumer
     }
@@ -192,14 +198,14 @@ void producer() {
 void consumer() {
     for (int i = 0; i < 20; i++) {
         std::unique_lock<std::mutex> lock(mtx);
-        
+
         // Wait until buffer has items
         cv.wait(lock, []() { return !buffer.empty(); });
-        
+
         int value = buffer.front();
         buffer.pop();
         std::cout << "Consumed: " << value << "\n";
-        
+
         lock.unlock();
         cv.notify_one();  // Notify producer
     }
@@ -208,7 +214,7 @@ void consumer() {
 int main() {
     std::thread t1(producer);
     std::thread t2(consumer);
-    
+
     t1.join();
     t2.join();
 }
@@ -263,13 +269,14 @@ cv2.wait(ul, []() { return condition2; });
 ## Performance Tips
 
 1. **Notify after unlock**: Slightly better performance
-   ```cpp
-   {
-       lock_guard<mutex> lg(mtx);
-       data = value;
-   }
-   cv.notify_one();  // After unlock
-   ```
+
+      ```cpp
+      {
+          lock_guard<mutex> lg(mtx);
+          data = value;
+      }
+      cv.notify_one();  // After unlock
+      ```
 
 2. **Use notify_all() sparingly**: Only when multiple threads can proceed
 
@@ -277,12 +284,12 @@ cv2.wait(ul, []() { return condition2; });
 
 ## Comparison with Other Mechanisms
 
-| Mechanism | Use Case | Efficiency |
-|-----------|----------|------------|
+| Mechanism              | Use Case           | Efficiency            |
+| ---------------------- | ------------------ | --------------------- |
 | **Condition Variable** | Wait for condition | ✅ Efficient (sleeps) |
-| **Busy-waiting** | Simple polling | ❌ Wastes CPU |
-| **Semaphore** | Resource counting | ✅ Efficient |
-| **Mutex only** | Simple protection | ❌ No signaling |
+| **Busy-waiting**       | Simple polling     | ❌ Wastes CPU         |
+| **Semaphore**          | Resource counting  | ✅ Efficient          |
+| **Mutex only**         | Simple protection  | ❌ No signaling       |
 
 ## Common Mistakes
 
@@ -312,4 +319,4 @@ cv.notify_one();  // Without holding lock
 ## Next Steps
 
 - Learn about deadlocks: `10_deadlock.cpp`
-- See producer-consumer implementation: `pre-requisites/implementations/00_producer_consumer_mutex.cpp`
+- See producer-consumer implementation: `fundamentals/implementations/00_producer_consumer_mutex.cpp`

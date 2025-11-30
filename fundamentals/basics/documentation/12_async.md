@@ -16,6 +16,7 @@ cout << "OddSum: " << oddSum.get() << "\n";  // Runs NOW in main thread
 ```
 
 **Behavior:**
+
 - Function doesn't run until you call `get()`
 - Runs in the calling thread (main thread)
 - **No parallelism** - just deferred execution
@@ -28,21 +29,23 @@ cout << "OddSum: " << oddSumAsync.get() << "\n";  // Waits for result
 ```
 
 **Behavior:**
+
 - Function runs immediately in a new thread
 - True parallelism
 - `get()` blocks until result is ready
 
 ## Launch Policies
 
-| Policy | When It Runs | Where It Runs |
-|--------|-------------|---------------|
-| `std::launch::deferred` | When you call `get()` | Same thread |
-| `std::launch::async` | Immediately | New thread |
-| Default (both) | Implementation decides | May or may not be parallel |
+| Policy                  | When It Runs           | Where It Runs              |
+| ----------------------- | ---------------------- | -------------------------- |
+| `std::launch::deferred` | When you call `get()`  | Same thread                |
+| `std::launch::async`    | Immediately            | New thread                 |
+| Default (both)          | Implementation decides | May or may not be parallel |
 
 ## Comparison with Promise/Future
 
 **With promise/future (more code):**
+
 ```cpp
 std::promise<ull> p;
 std::future<ull> f = p.get_future();
@@ -51,6 +54,7 @@ ull result = f.get();
 ```
 
 **With std::async (simpler):**
+
 ```cpp
 std::future<ull> f = std::async(std::launch::async, worker, args);
 ull result = f.get();
@@ -73,15 +77,17 @@ ull result = f.get();
 ## When to Use
 
 **Use std::async when:**
+
 - You want simple parallel execution
 - You need return values from threads
 - You want automatic thread management
 
 **Use std::thread when:**
+
 - You need more control
 - You don't need return values
 - You want to manage thread lifecycle manually
 
 ## Next Steps
 
-- Explore implementations: `pre-requisites/implementations/`
+- Explore implementations: `fundamentals/implementations/`

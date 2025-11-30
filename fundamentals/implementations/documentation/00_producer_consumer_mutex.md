@@ -3,6 +3,7 @@
 ## Overview
 
 The **producer-consumer** pattern is a classic synchronization problem where:
+
 - **Producer**: Creates/inserts data into a shared buffer
 - **Consumer**: Removes/processes data from the shared buffer
 
@@ -11,6 +12,7 @@ This example uses **mutex** and **condition variables** to coordinate between th
 ### Standard Definition
 
 The producer-consumer problem (also known as the bounded-buffer problem) involves:
+
 - A shared buffer with limited capacity
 - One or more producer threads that add items
 - One or more consumer threads that remove items
@@ -33,16 +35,16 @@ std::deque<int> buffer;
 void producer(int val) {
     while (val > 0) {
         std::unique_lock<std::mutex> locker(mut);
-        
+
         // Wait until buffer has space
-        cond.wait(locker, []() { 
-            return buffer.size() < maxBufferSize; 
+        cond.wait(locker, []() {
+            return buffer.size() < maxBufferSize;
         });
-        
+
         buffer.push_back(val);
         std::cout << "Produced: " << val << "\n";
         val--;
-        
+
         locker.unlock();
         cond.notify_one();  // Notify consumer
     }
@@ -51,16 +53,16 @@ void producer(int val) {
 void consumer(int totalToConsume) {
     for (int i = 0; i < totalToConsume; ++i) {
         std::unique_lock<std::mutex> locker(mut);
-        
+
         // Wait until buffer has items
-        cond.wait(locker, []() { 
-            return !buffer.empty(); 
+        cond.wait(locker, []() {
+            return !buffer.empty();
         });
-        
+
         int val = buffer.back();
         buffer.pop_back();
         std::cout << "Consumed: " << val << "\n";
-        
+
         locker.unlock();
         cond.notify_one();  // Notify producer
     }
@@ -70,10 +72,10 @@ int main() {
     int itemsToProduce = 50;
     std::thread t1(producer, itemsToProduce);
     std::thread t2(consumer, itemsToProduce);
-    
+
     t1.join();
     t2.join();
-    
+
     return 0;
 }
 ```
@@ -139,17 +141,18 @@ std::condition_variable cond;
 
 ```cpp
 // Producer waits for: buffer has space
-cond.wait(locker, []() { 
-    return buffer.size() < maxBufferSize; 
+cond.wait(locker, []() {
+    return buffer.size() < maxBufferSize;
 });
 
 // Consumer waits for: buffer has items
-cond.wait(locker, []() { 
-    return !buffer.empty(); 
+cond.wait(locker, []() {
+    return !buffer.empty();
 });
 ```
 
 **Why predicates?**
+
 - Prevents spurious wakeups
 - Verifies condition is actually met
 - More reliable than checking after wakeup
@@ -159,6 +162,7 @@ cond.wait(locker, []() {
 ### Problem: Busy-Waiting
 
 **Without condition variables:**
+
 ```cpp
 // ❌ Inefficient
 void producer() {
@@ -176,6 +180,7 @@ void producer() {
 ```
 
 **Problems:**
+
 - Wastes CPU checking repeatedly
 - Adds unnecessary delay
 - Doesn't respond immediately
@@ -183,12 +188,13 @@ void producer() {
 ### Solution: Condition Variables
 
 **With condition variables:**
+
 ```cpp
 // ✅ Efficient
 void producer() {
     std::unique_lock<std::mutex> locker(mut);
-    cond.wait(locker, []() { 
-        return buffer.size() < maxBufferSize; 
+    cond.wait(locker, []() {
+        return buffer.size() < maxBufferSize;
     });
     buffer.push_back(item);
     locker.unlock();
@@ -197,6 +203,7 @@ void producer() {
 ```
 
 **Benefits:**
+
 - Thread sleeps until condition is met
 - Wakes up immediately when notified
 - No CPU waste
@@ -221,23 +228,23 @@ private:
 
 public:
     ThreadSafeQueue(size_t max) : max_size(max) {}
-    
+
     void push(T item) {
         std::unique_lock<std::mutex> lock(mtx);
-        not_full.wait(lock, [this]() { 
-            return buffer.size() < max_size; 
+        not_full.wait(lock, [this]() {
+            return buffer.size() < max_size;
         });
-        
+
         buffer.push(item);
         not_empty.notify_one();
     }
-    
+
     T pop() {
         std::unique_lock<std::mutex> lock(mtx);
-        not_empty.wait(lock, [this]() { 
-            return !buffer.empty(); 
+        not_empty.wait(lock, [this]() {
+            return !buffer.empty();
         });
-        
+
         T item = buffer.front();
         buffer.pop();
         not_full.notify_one();
@@ -250,7 +257,7 @@ ThreadSafeQueue<int> queue(10);
 void producer(int id, int items) {
     for (int i = 0; i < items; i++) {
         queue.push(id * 100 + i);
-        std::cout << "Producer " << id << " produced: " 
+        std::cout << "Producer " << id << " produced: "
                   << (id * 100 + i) << "\n";
     }
 }
@@ -258,28 +265,28 @@ void producer(int id, int items) {
 void consumer(int id, int items) {
     for (int i = 0; i < items; i++) {
         int item = queue.pop();
-        std::cout << "Consumer " << id << " consumed: " 
+        std::cout << "Consumer " << id << " consumed: "
                   << item << "\n";
     }
 }
 
 int main() {
     std::vector<std::thread> threads;
-    
+
     // Create 2 producers
     for (int i = 0; i < 2; i++) {
         threads.push_back(std::thread(producer, i, 5));
     }
-    
+
     // Create 2 consumers
     for (int i = 0; i < 2; i++) {
         threads.push_back(std::thread(consumer, i, 5));
     }
-    
+
     for (auto& t : threads) {
         t.join();
     }
-    
+
     return 0;
 }
 ```
@@ -395,4 +402,4 @@ buffer.push_back(item);
 
 - Learn about semaphores: `02_binary_semaphore.cpp`
 - See semaphore-based producer-consumer: `03_producer_consumer_semaphore.cpp`
-- Learn condition variables in detail: `pre-requisites/basics/09_conditional_variable.cpp`
+- Learn condition variables in detail: `fundamentals/basics/09_conditional_variable.cpp`
