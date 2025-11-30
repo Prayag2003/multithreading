@@ -394,5 +394,5 @@ int idx = consumer_index.fetch_add(1);
 
 ## Next Steps
 
-- Learn about mutexes: `fundamentals/basics/03_mutex.cpp`
+- Learn about mutexes: `fundamentals/03_mutex.cpp`
 - Learn about semaphores: `02_binary_semaphore.cpp`

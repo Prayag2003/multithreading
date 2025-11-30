@@ -402,4 +402,4 @@ buffer.push_back(item);
 
 - Learn about semaphores: `02_binary_semaphore.cpp`
 - See semaphore-based producer-consumer: `03_producer_consumer_semaphore.cpp`
-- Learn condition variables in detail: `fundamentals/basics/09_conditional_variable.cpp`
+- Learn condition variables in detail: `fundamentals/09_conditional_variable.cpp`

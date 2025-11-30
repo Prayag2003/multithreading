@@ -11,29 +11,26 @@ A beginner-friendly learning repository for C++ concurrency concepts. Learn step
 
 ## 📚 What You'll Learn
 
-- **Basics**: Core threading concepts from scratch
+- **Fundamentals**: Core threading concepts from scratch
 - **Implementations**: Real-world patterns and solutions
 - **Best Practices**: How to write safe, efficient concurrent code
 
+---
+
 ## 🚀 Quick Start
 
-### Build All Examples
+### Build All Examples (using Makefile)
 
 ```bash
-# Create output directory
-mkdir -p bin
+git clone https://github.com/Prayag2003/multithreading
+cd multithreading
+make
+```
 
-# Build basics examples
-for f in fundamentals/basics/*.cpp; do
-    name=$(basename "$f" .cpp)
-    g++ -std=c++20 -Wall -Wextra -pthread "$f" -o "bin/$name"
-done
+### Clean all built binaries
 
-# Build implementation examples
-for f in fundamentals/implementations/*.cpp; do
-    name=$(basename "$f" .cpp)
-    g++ -std=c++20 -Wall -Wextra -pthread "$f" -o "bin/$name"
-done
+```bash
+make clean
 ```
 
 ### Run an Example
@@ -44,52 +41,52 @@ done
 
 ---
 
-## 📖 Basics: Threading Fundamentals
+## 📖 Fundamentals: Threading Basics
 
-Start here! Learn core concepts step by step. Each example builds on the previous one.
+Start here! Each example builds on the previous one.
 
-| #   | Code File                                                                        | Documentation                                                                          | What You'll Learn                                          |
-| --- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| 00  | [`00_basics_of_threads.cpp`](fundamentals/basics/00_basics_of_threads.cpp)       | [📖 Basics of Threads](fundamentals/basics/documentation/00_basics_of_threads.md)      | What threads are, why they're useful, race conditions      |
-| 01  | [`01_thread_creation.cpp`](fundamentals/basics/01_thread_creation.cpp)           | [📖 Thread Creation](fundamentals/basics/documentation/01_thread_creation.md)          | Functions, functors, lambdas, passing arguments            |
-| 02  | [`02_join_detach.cpp`](fundamentals/basics/02_join_detach.cpp)                   | [📖 join() vs detach()](fundamentals/basics/documentation/02_join_detach.md)           | Thread lifetime, waiting, independent threads              |
-| 03  | [`03_mutex.cpp`](fundamentals/basics/03_mutex.cpp)                               | [📖 Mutex Protection](fundamentals/basics/documentation/03_mutex.md)                   | Protecting shared data, critical sections, locks           |
-| 04  | [`04_try_lock.cpp`](fundamentals/basics/04_try_lock.cpp)                         | [📖 try_lock()](fundamentals/basics/documentation/04_try_lock.md)                      | Non-blocking lock attempts, avoiding deadlocks             |
-| 05  | [`05_multiple_try_lock.cpp`](fundamentals/basics/05_multiple_try_lock.cpp)       | [📖 Multiple Locks](fundamentals/basics/documentation/05_multiple_try_lock.md)         | Locking multiple mutexes safely, `std::lock()`             |
-| 06  | [`06_recursion_lock.cpp`](fundamentals/basics/06_recursion_lock.cpp)             | [📖 Recursive Mutex](fundamentals/basics/documentation/06_recursion_lock.md)           | Recursive locking, reentrancy, `std::recursive_mutex`      |
-| 07  | [`07_lock_guard.cpp`](fundamentals/basics/07_lock_guard.cpp)                     | [📖 Lock Guard](fundamentals/basics/documentation/07_lock_guard.md)                    | RAII pattern, automatic unlocking, exception safety        |
-| 08  | [`08_unique_lock.cpp`](fundamentals/basics/08_unique_lock.cpp)                   | [📖 Unique Lock](fundamentals/basics/documentation/08_unique_lock.md)                  | Manual control, deferred locking, timed waits              |
-| 09  | [`09_conditional_variable.cpp`](fundamentals/basics/09_conditional_variable.cpp) | [📖 Condition Variables](fundamentals/basics/documentation/09_conditional_variable.md) | Thread signaling, producer-consumer, `wait()` / `notify()` |
-| 10  | [`10_deadlock.cpp`](fundamentals/basics/10_deadlock.cpp)                         | [📖 Deadlock Prevention](fundamentals/basics/documentation/10_deadlock.md)             | Circular waits, safe lock ordering, detection              |
-| 11  | [`11_future_and_promise.cpp`](fundamentals/basics/11_future_and_promise.cpp)     | [📖 Futures & Promises](fundamentals/basics/documentation/11_future_and_promise.md)    | Getting return values from threads, exception passing      |
-| 12  | [`12_async.cpp`](fundamentals/basics/12_async.cpp)                               | [📖 std::async](fundamentals/basics/documentation/12_async.md)                         | Simplest concurrency, automatic thread management          |
+| #   | Code File                                                                 | Documentation                                                                   | What You'll Learn                           |
+| --- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------- |
+| 00  | [`00_basics_of_threads.cpp`](fundamentals/00_basics_of_threads.cpp)       | [📖 Basics of Threads](fundamentals/documentation/00_basics_of_threads.md)      | What threads are, race conditions           |
+| 01  | [`01_thread_creation.cpp`](fundamentals/01_thread_creation.cpp)           | [📖 Thread Creation](fundamentals/documentation/01_thread_creation.md)          | Functions, functors, lambdas                |
+| 02  | [`02_join_detach.cpp`](fundamentals/02_join_detach.cpp)                   | [📖 join() vs detach()](fundamentals/documentation/02_join_detach.md)           | Thread lifetime, waiting                    |
+| 03  | [`03_mutex.cpp`](fundamentals/03_mutex.cpp)                               | [📖 Mutex Protection](fundamentals/documentation/03_mutex.md)                   | Protecting shared data                      |
+| 04  | [`04_try_lock.cpp`](fundamentals/04_try_lock.cpp)                         | [📖 try_lock()](fundamentals/documentation/04_try_lock.md)                      | Non-blocking locks                          |
+| 05  | [`05_multiple_try_lock.cpp`](fundamentals/05_multiple_try_lock.cpp)       | [📖 Multiple Locks](fundamentals/documentation/05_multiple_try_lock.md)         | Locking multiple mutexes safely             |
+| 06  | [`06_recursion_lock.cpp`](fundamentals/06_recursion_lock.cpp)             | [📖 Recursive Mutex](fundamentals/documentation/06_recursion_lock.md)           | Recursive locking                           |
+| 07  | [`07_lock_guard.cpp`](fundamentals/07_lock_guard.cpp)                     | [📖 Lock Guard](fundamentals/documentation/07_lock_guard.md)                    | RAII, exception safety                      |
+| 08  | [`08_unique_lock.cpp`](fundamentals/08_unique_lock.cpp)                   | [📖 Unique Lock](fundamentals/documentation/08_unique_lock.md)                  | Deferred locking, timed waits               |
+| 09  | [`09_conditional_variable.cpp`](fundamentals/09_conditional_variable.cpp) | [📖 Condition Variables](fundamentals/documentation/09_conditional_variable.md) | Thread signaling, producer-consumer pattern |
+| 10  | [`10_deadlock.cpp`](fundamentals/10_deadlock.cpp)                         | [📖 Deadlock Prevention](fundamentals/documentation/10_deadlock.md)             | Circular waits, prevention                  |
+| 11  | [`11_future_and_promise.cpp`](fundamentals/11_future_and_promise.cpp)     | [📖 Futures & Promises](fundamentals/documentation/11_future_and_promise.md)    | Getting results from threads                |
+| 12  | [`12_async.cpp`](fundamentals/12_async.cpp)                               | [📖 std::async](fundamentals/documentation/12_async.md)                         | Automatic async execution                   |
 
 ---
 
 ## 🏗️ Implementations: Real-World Patterns
 
-Apply what you've learned to solve practical problems.
+Your applied learning section.
 
-| #   | Code File                                                                                               | Documentation                                                                                                    | What You'll Learn                                |
-| --- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| 00  | [`00_producer_consumer_mutex.cpp`](fundamentals/implementations/00_producer_consumer_mutex.cpp)         | [📖 Producer-Consumer (Mutex)](fundamentals/implementations/documentation/00_producer_consumer_mutex.md)         | Bounded buffer pattern, mutex-based coordination |
-| 01  | [`01_atomic.cpp`](fundamentals/implementations/01_atomic.cpp)                                           | [📖 Atomics](fundamentals/implementations/documentation/01_atomic.md)                                            | Lock-free synchronization, atomic operations     |
-| 02  | [`02_binary_semaphore.cpp`](fundamentals/implementations/02_binary_semaphore.cpp)                       | [📖 Binary Semaphore](fundamentals/implementations/documentation/02_binary_semaphore.md)                         | Semaphore basics, acquire/release pattern        |
-| 03  | [`03_producer_consumer_semaphore.cpp`](fundamentals/implementations/03_producer_consumer_semaphore.cpp) | [📖 Producer-Consumer (Semaphore)](fundamentals/implementations/documentation/03_producer_consumer_semaphore.md) | Elegant bounded buffer with semaphores           |
+| #   | Code File                                                                                  | Documentation                                                                                       | What You'll Learn                           |
+| --- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 00  | [`00_producer_consumer_mutex.cpp`](implementations/00_producer_consumer_mutex.cpp)         | [📖 Producer-Consumer (Mutex)](implementations/documentation/00_producer_consumer_mutex.md)         | Bounded buffer, mutex-based synchronization |
+| 01  | [`01_atomic.cpp`](implementations/01_atomic.cpp)                                           | [📖 Atomics](implementations/documentation/01_atomic.md)                                            | Lock-free counters, atomic operations       |
+| 02  | [`02_binary_semaphore.cpp`](implementations/02_binary_semaphore.cpp)                       | [📖 Binary Semaphore](implementations/documentation/02_binary_semaphore.md)                         | Semaphore basics, acquire/release pattern   |
+| 03  | [`03_producer_consumer_semaphore.cpp`](implementations/03_producer_consumer_semaphore.cpp) | [📖 Producer-Consumer (Semaphore)](implementations/documentation/03_producer_consumer_semaphore.md) | Elegant bounded buffer using semaphores     |
 
 ---
 
 ## 🎯 Key Concepts Quick Reference
 
-| Concept                 | Use When                                   | See Example                          |
-| ----------------------- | ------------------------------------------ | ------------------------------------ |
-| **Mutex**               | Protecting shared data                     | `03_mutex.cpp`                       |
-| **Lock Guard**          | Simple RAII locking                        | `07_lock_guard.cpp`                  |
-| **Unique Lock**         | Need manual control or condition variables | `08_unique_lock.cpp`                 |
-| **Condition Variables** | Threads need to signal each other          | `09_conditional_variable.cpp`        |
-| **std::async**          | Need results from threads                  | `12_async.cpp`                       |
-| **Atomics**             | Simple shared flags/counters               | `01_atomic.cpp`                      |
-| **Semaphores**          | Resource counting, bounded buffer          | `03_producer_consumer_semaphore.cpp` |
+| Concept                 | Use When                        | See Example                          |
+| ----------------------- | ------------------------------- | ------------------------------------ |
+| **Mutex**               | Protecting shared data          | `03_mutex.cpp`                       |
+| **Lock Guard**          | Simple RAII locking             | `07_lock_guard.cpp`                  |
+| **Unique Lock**         | Manual lock control             | `08_unique_lock.cpp`                 |
+| **Condition Variables** | Thread coordination             | `09_conditional_variable.cpp`        |
+| **std::async**          | Fetching results from threads   | `12_async.cpp`                       |
+| **Atomics**             | Lock-free shared counters/flags | `01_atomic.cpp`                      |
+| **Semaphores**          | Resource counting               | `03_producer_consumer_semaphore.cpp` |
 
 ---
 
@@ -100,76 +97,60 @@ Apply what you've learned to solve practical problems.
 ```cpp
 std::mutex mtx;
 std::lock_guard<std::mutex> guard(mtx);
-sharedData++;
 ```
 
-### Wait for Signal
+### Wait for a Signal
 
 ```cpp
-std::condition_variable cv;
-cv.wait(lock, []() { return ready; });
+cv.wait(lock, [] { return ready; });
 ```
 
-### Get Result from Thread
+### Get a Result from a Thread
 
 ```cpp
-auto future = std::async(compute, args);
+auto future = std::async(compute);
 int result = future.get();
 ```
 
 ### Lock Multiple Resources Safely
 
 ```cpp
-std::scoped_lock lock(mtx1, mtx2);  // C++17
+std::scoped_lock lock(m1, m2);
 ```
-
----
-
-## 📝 Learning Tips
-
-✅ **Read the documentation first** - Understand concepts before diving into code  
-✅ **Run each example** - See the output, modify it, experiment  
-✅ **Progress sequentially** - Each topic builds on previous ones  
-✅ **Keep it simple** - Focus on one concept per example  
-✅ **Practice** - Try creating your own variations
 
 ---
 
 ## 🔧 Requirements
 
 - **C++20** or later
-- **GCC**, **Clang**, or **MSVC** compiler
-- **pthread** library (usually included with compiler)
+- GCC / Clang / MSVC
+- pthread support
 
 ---
 
-## 📚 Project Structure
+## 📚 Project Structure (UPDATED)
 
 ```
-threadpool/
+threading-guide/
 ├── fundamentals/
-│   ├── basics/
-│   │   ├── *.cpp                    # Example code files
-│   │   └── documentation/          # Documentation for basics
-│   │       └── *.md
-│   └── implementations/
-│       ├── *.cpp                    # Implementation examples
-│       └── documentation/           # Documentation for implementations
-│           └── *.md
-├── threadpool.cpp                   # Main threadpool implementation
-└── README.md                        # This file
+│   ├── *.cpp                    # Basic threading examples
+│   └── documentation/           # Markdown docs for fundamentals
+│       └── *.md
+├── implementations/
+│   ├── *.cpp                    # Advanced real-world patterns
+│   └── documentation/           # Markdown docs for implementations
+│       └── *.md
+├── bin/                         # Auto-created binaries (via Makefile)
+├── Makefile
+└── README.md
 ```
 
 ---
 
 ## 🎓 How to Use This Repository
 
-1. **Start with Basics**: Begin with `00_basics_of_threads.cpp` and work through sequentially
-2. **Read Documentation**: Each code file has corresponding documentation explaining the concepts
-3. **Run Examples**: Compile and run each example to see it in action
-4. **Experiment**: Modify the code to understand how changes affect behavior
-5. **Move to Implementations**: Once comfortable with basics, explore real-world patterns
-
----
-
-**Happy Learning! 🚀**
+1. **Start with Fundamentals** → Work through 00 → 12
+2. **Read Documentation** → Understand each concept deeply
+3. **Run Examples** → See how they work
+4. **Experiment** → Modify values, add threads, cause bugs
+5. **Move to Implementations** → Learn real-world concurrency patterns
