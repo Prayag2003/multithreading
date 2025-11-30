@@ -23,6 +23,10 @@ cd multithreading
 make
 ```
 
+### Output:
+
+![alt text](/assets/make.png)
+
 ### Clean all built binaries
 
 ```bash
