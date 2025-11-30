@@ -5,17 +5,13 @@ A beginner-friendly learning repository for C++ concurrency concepts. Learn step
 ## 🔗 Resources
 
 - [🔴 YouTube: Cpp Nuts Multithreading Playlist](https://youtu.be/TPVH_coGAQs)
-- [C++ Reference: Threading](https://en.cppreference.com/w/cpp/thread)
-- [C++ Reference: Mutex](https://en.cppreference.com/w/cpp/thread/mutex)
-- [C++ Reference: Condition Variables](https://en.cppreference.com/w/cpp/thread/condition_variable)
+- [C++ Reference](https://en.cppreference.com)
 
 ## 📚 What You'll Learn
 
 - **Fundamentals**: Core threading concepts from scratch
 - **Implementations**: Real-world patterns and solutions
 - **Best Practices**: How to write safe, efficient concurrent code
-
----
 
 ## 🚀 Quick Start
 
@@ -43,8 +39,6 @@ make clean
 
 ## 📖 Fundamentals: Threading Basics
 
-Start here! Each example builds on the previous one.
-
 | #   | Code File                                                                 | Documentation                                                                   | What You'll Learn                           |
 | --- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------- |
 | 00  | [`00_basics_of_threads.cpp`](fundamentals/00_basics_of_threads.cpp)       | [📖 Basics of Threads](fundamentals/documentation/00_basics_of_threads.md)      | What threads are, race conditions           |
@@ -64,8 +58,6 @@ Start here! Each example builds on the previous one.
 ---
 
 ## 🏗️ Implementations: Real-World Patterns
-
-Your applied learning section.
 
 | #   | Code File                                                                                  | Documentation                                                                                       | What You'll Learn                           |
 | --- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------- |
